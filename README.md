@@ -2,210 +2,162 @@
 
 ## **ÍNDICE**
 
-- [1. Introducción](#1-introducción)  
-- [2. Objetivos de Aprendizaje](#2-objetivos-de-aprendizaje)  
-- [3. Arquitectura del Proyecto](#3-arquitectura-del-proyecto)  
-- [4. Descripción de los Endpoints](#4-descripción-de-los-endpoints)  
-- [5. Ejemplos de uso en Postman](#5-ejemplos-de-uso-en-postman)  
-- [6. Documentación con Swagger](#6-documentación-con-swagger)  
-- [7. Despliegue en Render](#7-despliegue-en-render)  
-- [8. Requisitos Técnicos](#8-requisitos-técnicos)  
-- [9. Dependencias](#9-dependencias)  
-- [10. Criterios de Evaluación](#10-criterios-de-evaluación)  
-- [11. Conclusiones y Aprendizajes](#11-conclusiones-y-aprendizajes)
+- [1. Introducción](#1-introducción)
+- [2. Detalle del desarrollo](#2-detalle-del-desarrollo)
+- [3. Descripción de los Endpoints](#3-descripción-de-los-endpoints)
+- [4. Ejemplos de uso en Postman](#4-ejemplos-de-uso-en-postman)
+- [5. Documentación con Swagger](#5-documentación-con-swagger)
+- [6. Despliegue en Render](#6-despliegue-en-render)
+
+
 
 ---
 
 ## 1. **Introducción**
 
-Este proyecto consiste en el desarrollo de una **API REST** que permite la gestión completa de **reservas hoteleras**.  
-Fue desarrollado en **Node.js con Express.js**, aplicando los principios CRUD (Crear, Leer, Actualizar y Eliminar) y el patrón modular.
+Este proyecto fue desarrollado en el marco del **Bootcamp Desarrollo Web Full Stack**.\
+Durante el **Módulo 4**, se realizó el desarrollo de una **API REST** que permite la gestión completa de **reservas hoteleras**.\
+Esto fue ejecutado con **Node.js** y **Express.js**, con la finalidad de aplicar los principios **CRUD (Crear, Leer, Actualizar y Eliminar)**.
 
-El objetivo principal fue comprender cómo crear y estructurar un servidor, trabajar con rutas y controladores separados, y gestionar información mediante peticiones HTTP.
-
-Además, como mejora opcional, se incluyó:
-- Documentación completa de los endpoints con **Swagger y OpenAPI**.  
-- **Despliegue en Render.com**, logrando una API pública funcional.
+Además, como mejora opcional, se dejó la documentación completa de los endpoints utilizando **Swagger y OpenAPI**, y se realizó el despliegue en **Render.com** para que la API quedara pública y funcional.
 
 ---
 
-## 2. **Objetivos de Aprendizaje**
+## 2. **Detalle del desarrollo**
 
-- Implementar un servidor con **Express.js**.  
-- Aplicar el patrón **modular**, separando controladores, rutas y servidor.  
-- Crear endpoints RESTful con los métodos `POST`, `GET`, `PUT` y `DELETE`.  
-- Utilizar **UUID** para generar IDs únicos.  
-- Usar **variables de entorno** mediante `.env`.  
-- Documentar la API con **Swagger (OpenAPI 3.0)**.  
-- Configurar y desplegar la API en **Render.com**.  
+El desarrollo se organizó en tres archivos principales `.js`:
 
----
+1. **server.js:**\
+   Es el archivo principal del proyecto. Aquí se crea la aplicación de Express y se define la ruta principal del servidor.
 
-## 3. **Arquitectura del Proyecto**
+2. **Archivo de rutas:**\
+   En este archivo se abordan los distintos métodos HTTP: `GET`, `POST`, `PUT` y `DELETE`. Cada uno de ellos permite interactuar con las reservas a través de endpoints definidos.
 
-El proyecto está organizado en una estructura modular que facilita la lectura y el mantenimiento del código:
+3. **Archivo de controladores:**\
+   Contiene todas las funciones que ejecutan la lógica del sistema. Entre ellas:
 
-```
-proyecto-booking/
-├── controllers/
-│   └── reservasController.js
-├── routes/
-│   └── reservas.js
-├── server.js
-├── swagger/
-│   └── swagger.json
-├── .env
-├── .gitignore
-├── .prettierrc
-├── package.json
-└── README.md
-```
+   - **Función crearReserva:**\
+     Permite crear una nueva reserva solicitando al usuario información básica: nombre del hotel, fechas, tipo de habitación, número de adultos y niños.\
+     Además, el sistema automáticamente agrega un **ID único** mediante `UUID` y un atributo **pagada**, cuyo valor por defecto es `false`.
 
----
+   - **Función GET (leer reservas):**\
+     Permite obtener todas las reservas registradas o aplicar distintos filtros, entre ellos:
 
-## 4. **Descripción de los Endpoints**
+     - Filtrar por tipo de habitación.
+     - Filtrar por nombre del hotel.
+     - Filtrar por rango de fechas.
+     - Filtrar si la reserva está pagada o no.
+     - Filtrar por número mínimo de huéspedes (considerando adultos y niños).
 
-| Método | Endpoint | Descripción | Ejemplo de uso |
-|--------|-----------|-------------|----------------|
-| **POST** | `/api/reservas` | Crea una nueva reserva. | Crear reserva en el Hotel Paraíso. |
-| **GET** | `/api/reservas` | Obtiene todas las reservas o filtra por parámetros. | Filtrar por hotel, tipo de habitación o estado de pago. |
-| **GET** | `/api/reservas/:id` | Consulta una reserva específica por su ID. | Buscar reserva 12345. |
-| **PUT** | `/api/reservas/:id` | Actualiza los datos de una reserva existente. | Cambiar habitación doble a suite familiar. |
-| **DELETE** | `/api/reservas/:id` | Elimina una reserva por su ID. | Eliminar reserva 12345. |
+   - **Función GET por ID:**\
+     Permite obtener la información completa de una reserva específica utilizando su ID.
+
+   - **Función PUT (actualizar reserva):**\
+     Permite actualizar los datos de una reserva existente. Se debe especificar el ID en la URL y enviar los nuevos datos en el cuerpo de la solicitud.
+
+   - **Función DELETE (eliminar reserva):**\
+     Permite eliminar una reserva específica del sistema, indicando su ID correspondiente.
 
 ---
 
-## 5. **Ejemplos de uso en Postman**
+## 3. **Descripción de los Endpoints**
+
+| Método     | Endpoint            | Descripción                                         | Ejemplo de uso                                          |
+| ---------- | ------------------- | --------------------------------------------------- | ------------------------------------------------------- |
+| **POST**   | `/api/reservas`     | Crea una nueva reserva.                             | Crear reserva en el Hotel Paraíso.                      |
+| **GET**    | `/api/reservas`     | Obtiene todas las reservas o filtra por parámetros. | Filtrar por hotel, tipo de habitación o estado de pago. |
+| **GET**    | `/api/reservas/:id` | Consulta una reserva específica por su ID.          | Buscar reserva 12345.                                   |
+| **PUT**    | `/api/reservas/:id` | Actualiza los datos de una reserva existente.       | Cambiar habitación doble a suite familiar.              |
+| **DELETE** | `/api/reservas/:id` | Elimina una reserva por su ID.                      | Eliminar reserva 12345.                                 |
+
+---
+
+## 4. **Ejemplos de uso en Postman**
 
 ### ➤ **POST** `/api/reservas`
+
 **Body (JSON):**
+
 ```json
 {
-  "hotel": "Hotel Paraíso",
-  "tipoHabitacion": "Doble",
-  "fechaEntrada": "2023-05-15",
-  "fechaSalida": "2023-05-20",
-  "huespedes": 3,
-  "nombreCliente": "Mauricio Larrondo",
-  "email": "mauricio@example.com"
+  "nombreHotel": "Hotel Paraíso",
+  "fecha": "2025-06-15",
+  "tipoHabitacion": "Normal",
+  "adultos": 2,
+  "ninos": 10
 }
 ```
 
 ### ➤ **PUT** `/api/reservas/:id`
+
 **Body (JSON):**
+
 ```json
-{
-  "tipoHabitacion": "Suite Familiar",
-  "huespedes": 4,
-  "pagado": true
-}
+    {
+        "nombreHotel": "Hotel Paraíso",
+        "fecha": "2025-07-15T00:00:00.000Z",
+        "tipoHabitacion": "Suite",
+        "adultos": 2,
+        "ninos": 5,
+        "pagada": false
+    }
 ```
 
 ---
 
-## 6. **Documentación con Swagger**
+## 5. **Documentación con Swagger**
 
 La documentación completa de la API fue generada en formato **OpenAPI 3.0** utilizando **Swagger UI**.
 
 Esto permite visualizar y probar todos los endpoints desde el navegador, con sus parámetros, ejemplos y respuestas.
 
 ### 📘 Acceso local:
+
 ```
 http://localhost:3000/api-docs
 ```
 
 ### 📗 Estructura del archivo:
+
 El archivo `swagger/swagger.json` contiene la especificación completa de la API, incluyendo:
 
-- Descripción general del servicio.  
-- Paths, métodos y parámetros.  
-- Ejemplos de request y response.  
+- Descripción general del servicio.
+- Paths, métodos y parámetros.
+- Ejemplos de request y response.
 - Códigos de estado HTTP.
 
 ### 🧠 Nota:
+
 Toda la documentación fue desarrollada con el apoyo de **ChatGPT**, utilizando prompts para generar la especificación OpenAPI de manera automatizada.
 
 ---
 
-## 7. **Despliegue en Render**
+## 6. **Despliegue en Render**
 
 La aplicación fue desplegada exitosamente en **Render.com**, una plataforma de hosting gratuita para Node.js.
 
 ### 🌍 URL pública:
+
 ```
-https://api-booking-node.onrender.com
+https://proyectodwfsm04.onrender.com/api-docs/#/
 ```
 
 El despliegue fue configurado con las siguientes características:
-- **Repositorio GitHub** conectado automáticamente a Render.  
-- **Branch principal** (`main`) para actualizaciones automáticas.  
-- Uso de **.env** para definir el puerto del servidor.  
-- **Build Command:** `npm install`  
-- **Start Command:** `npm start`  
+
+- **Repositorio GitHub** conectado automáticamente a Render.
+- **Branch principal** (`main`) para actualizaciones automáticas.
+- Uso de **.env** para definir el puerto del servidor.
+- **Build Command:** `npm install`
+- **Start Command:** `npm start`
 
 Esta configuración también fue asistida por ChatGPT, utilizando prompts para preparar el archivo `package.json` y los scripts necesarios.
 
----
-
-## 8. **Requisitos Técnicos**
-
-- Desarrollado de forma **individual**.  
-- Uso de **Node.js**, **Express**, **UUID**, **dotenv** y **nodemon**.  
-- CRUD funcional y probado con **Postman**.  
-- Documentación con **Swagger**.  
-- Despliegue en **Render.com**.  
-- Uso de `.env`, `.gitignore` y `.prettierrc`.
 
 ---
 
-## 9. **Dependencias**
+## 7. **Comentarios adicionales**
 
-```bash
-npm install express
-npm install uuid
-npm install dotenv
-npm install swagger-ui-express
-npm install nodemon --save-dev
-```
-
-**Archivo `.env`:**
-```
-PORT=3000
-```
-
-**Script en `package.json`:**
-```json
-"scripts": {
-  "start": "nodemon server.js"
-}
-```
-
----
-
-## 10. **Criterios de Evaluación**
-
-| Área | % del Total |
-|------|--------------|
-| Implementación CRUD (POST, GET, PUT, DELETE) | 35% |
-| Organización modular (controladores, rutas, servidor) | 20% |
-| Uso de UUID, dotenv y nodemon | 10% |
-| Documentación con Swagger (opcional) | 15% |
-| Despliegue en Render (opcional) | 10% |
-| Buenas prácticas y README documentado | 10% |
-
----
-
-## 11. **Conclusiones y Aprendizajes**
-
-Este proyecto permitió afianzar los conocimientos sobre el desarrollo de **APIs RESTful** con Node.js y Express.  
-A través de su implementación, comprendí el flujo completo de un servidor, el manejo de rutas, controladores y módulos.
-
-Además, pude aplicar buenas prácticas profesionales:
-- Uso de **UUID** para IDs únicos.  
-- Separación clara entre capas (rutas, controladores, servidor).  
-- **Documentación con Swagger** para mejorar la usabilidad de la API.  
-- **Despliegue en Render**, logrando una versión funcional en línea.  
-
-Gracias al apoyo de **ChatGPT**, pude resolver dudas técnicas, generar la documentación OpenAPI y automatizar parte del proceso de despliegue.  
-Con ello, el proyecto quedó **completo, funcional y listo para producción.**
+✨ El proyecto fue desarrollado de manera **individual**, con el apoyo de **ChatGPT**, para resolver dudas, complementar conocimientos y agregar funcionalidades como el uso de **UUID**, la elaboración de la documentación con **Swagger** y el despliegue en **Render**.  
+🧠 Todo el proceso de documentación y despliegue fue realizado completamente con ChatGPT, proporcionándole los prompts necesarios.  
+📝 Finalmente, el desarrollo de este **README** también fue realizado con ChatGPT, utilizando un prompt elaborado íntegramente por el autor **Mauricio Larrondo**.
 
